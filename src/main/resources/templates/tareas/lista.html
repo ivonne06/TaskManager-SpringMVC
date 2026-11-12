@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de tareas</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/tareas}">TaskManager</a>
+    </div>
+</nav>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Gestión de tareas</h2>
+            <p class="text-muted">Administra tus actividades pendientes.</p>
+        </div>
+
+        <a th:href="@{/tareas/nueva}" class="btn btn-primary">
+            + Nueva tarea
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Fecha de creación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="tarea : ${tareas}">
+                            <td th:text="${tarea.id}"></td>
+
+                            <td th:text="${tarea.titulo}"></td>
+
+                            <td th:text="${tarea.descripcion}"></td>
+
+                            <td>
+                                <span th:if="${tarea.estado == 'PENDIENTE'}"
+                                      class="badge bg-warning text-dark"
+                                      th:text="${tarea.estado}"></span>
+
+                                <span th:if="${tarea.estado == 'EN PROGRESO'}"
+                                      class="badge bg-primary"
+                                      th:text="${tarea.estado}"></span>
+
+                                <span th:if="${tarea.estado == 'COMPLETADA'}"
+                                      class="badge bg-success"
+                                      th:text="${tarea.estado}"></span>
+                            </td>
+
+                            <td th:text="${#temporals.format(tarea.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></td>
+
+                            <td>
+                                <a th:href="@{/tareas/editar/{id}(id=${tarea.id})}"
+                                   class="btn btn-sm btn-warning">
+                                    Editar
+                                </a>
+
+                                <a th:href="@{/tareas/eliminar/{id}(id=${tarea.id})}"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('¿Deseas eliminar esta tarea?')">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(tareas)}">
+                            <td colspan="6" class="text-center text-muted py-4">
+                                No hay tareas registradas.
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
